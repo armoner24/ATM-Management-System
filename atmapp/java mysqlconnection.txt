@@ -1,0 +1,9 @@
+[root@localhost ~]# cd Desktop
+[root@localhost Desktop]# cd src
+[root@localhost src]# classpath=./:/usr/share/java/mysql-connector-java.jar
+[root@localhost src]# echo $classpath
+./:/usr/share/java/mysql-connector-java.jar
+[root@localhost src]# javac AddNewSupplier.java
+[root@localhost src]# java -cp $classpath AddNewSupplier
+Connected to database.
+

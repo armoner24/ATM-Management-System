@@ -1,0 +1,118 @@
+
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 5.5.8-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights rese
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input sta
+
+mysql> create database atmdb;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use atmdb;
+Database changed
+
+mysql> create table accountdetail(atmno int(20) primary key,accno int(20) 
+unique key,pinno int(10),acctype varchar(50),name varchar(100),balance fl
+oat,atmexpirydate date);
+
+
+mysql> desc accountdetail;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| atmno         | int(20)      | NO   | PRI | NULL    |       |
+| accno         | int(20)      | NO   | UNI | NULL    |       |
+| pinno         | int(10)      | NO   |     | NULL    |       |
+| acctype       | varchar(50)  | NO   |     | NULL    |       |
+| name          | varchar(100) | NO   |     | NULL    |       |
+| balance       | float        | NO   |     | NULL    |       |
+| atmexpirydate | date         | NO   |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+
+mysql> select * from accountdetail;
++--------+--------+-------+---------+----------------+---------+---------------+
+
+| atmno  | accno  | pinno | acctype | name           | balance | atmexpirydate |
+
++--------+--------+-------+---------+----------------+---------+---------------+
+
+|   1000 |  10001 |  1111 | saving  | Akshay Mahadik |   85300 | 2018-03-31    |
+
+|   4000 |  40001 |  4444 | saving  | Akash Mane     |   22700 | 2014-03-02    |
+
+|   5000 |  50001 |  5555 | current | Kiran Marne    |    7000 | 2018-03-31    |
+
+| 100011 | 100011 |  1000 | current | Mayur Kulkarni |  100000 | 2014-03-17    |
+
++--------+--------+-------+---------+----------------+---------+---------------+
+
+4 rows in set (0.00 sec)
+
+mysql> create table transaction(trid int(10) primary key auto_increment,atmno in
+t(20),foreign key(atmno)references accountdetail(atmno),accno int(20),foreign ke
+y(accno)references accountdetail(accno),depositamt float,withamt float,avbalance,tdate date);
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> desc transaction;
++------------+---------+------+-----+---------+----------------+
+| Field      | Type    | Null | Key | Default | Extra          |
++------------+---------+------+-----+---------+----------------+
+| trid       | int(10) | NO   | PRI | NULL    | auto_increment |
+| atmno      | int(20) | YES  | MUL | NULL    |                |
+| accno      | int(20) | YES  | MUL | NULL    |                |
+| depositamt | float   | YES  |     | NULL    |                |
+| withamt    | float   | YES  |     | NULL    |                |
+| avbalance  | float   | NO   |     | NULL    |                |
+| tdate      | date    | YES  |     | NULL    |                |
++------------+---------+------+-----+---------+----------------+
+7 rows in set (0.01 sec)
+
+mysql> select * from transaction;
++------+-------+-------+------------+---------+-----------+------------+
+| trid | atmno | accno | depositamt | withamt | avbalance | tdate      |
++------+-------+-------+------------+---------+-----------+------------+
+|   38 |  1000 | 10001 |          0 |       0 |     61500 | 2014-04-02 |
+|   39 |  1000 | 10001 |       1000 |       0 |     62500 | 2014-04-02 |
+|   40 |  1000 | 10001 |          0 |     100 |     62400 | 2014-04-02 |
+|   41 |  1000 | 10001 |      10000 |       0 |     72400 | 2014-04-02 |
+|   42 |  1000 | 10001 |          0 |    1000 |     71400 | 2014-04-03 |
+|   43 |  1000 | 10001 |          0 |    1000 |     70400 | 2014-04-03 |
+|   44 |  1000 | 10001 |      10000 |       0 |     80400 | 2014-04-03 |
+|   45 |  1000 | 10001 |       1000 |       0 |     81400 | 2014-04-03 |
+|   46 |  1000 | 10001 |       2000 |       0 |     83400 | 2014-04-03 |
+|   47 |  1000 | 10001 |          0 |     100 |     83300 | 2014-04-03 |
+|   48 |  1000 | 10001 |        200 |       0 |     83500 | 2014-04-03 |
+|   49 |  1000 | 10001 |          0 |     100 |     83400 | 2014-04-03 |
+|   50 |  1000 | 10001 |       1000 |       0 |     84400 | 2014-04-03 |
+|   51 |  1000 | 10001 |       1000 |       0 |     85400 | 2014-04-03 |
+|   52 |  1000 | 10001 |          0 |     100 |     85300 | 2014-04-03 |
++------+-------+-------+------------+---------+-----------+------------+
+15 rows in set (0.00 sec)
+
+mysql> select * from transaction where atmno=1000 order by trid desc limit 10;
++------+-------+-------+------------+---------+-----------+------------+
+| trid | atmno | accno | depositamt | withamt | avbalance | tdate      |
++------+-------+-------+------------+---------+-----------+------------+
+|   52 |  1000 | 10001 |          0 |     100 |     85300 | 2014-04-03 |
+|   51 |  1000 | 10001 |       1000 |       0 |     85400 | 2014-04-03 |
+|   50 |  1000 | 10001 |       1000 |       0 |     84400 | 2014-04-03 |
+|   49 |  1000 | 10001 |          0 |     100 |     83400 | 2014-04-03 |
+|   48 |  1000 | 10001 |        200 |       0 |     83500 | 2014-04-03 |
+|   47 |  1000 | 10001 |          0 |     100 |     83300 | 2014-04-03 |
+|   46 |  1000 | 10001 |       2000 |       0 |     83400 | 2014-04-03 |
+|   45 |  1000 | 10001 |       1000 |       0 |     81400 | 2014-04-03 |
+|   44 |  1000 | 10001 |      10000 |       0 |     80400 | 2014-04-03 |
+|   43 |  1000 | 10001 |          0 |    1000 |     70400 | 2014-04-03 |
++------+-------+-------+------------+---------+-----------+------------+
+10 rows in set (0.01 sec)
+
+
